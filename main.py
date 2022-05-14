@@ -31,8 +31,17 @@ def save():
                                                   f"\nPassword{password}\nIs this OK to save?")
 
         if is_ok:
-            with open("data.txt", 'a') as data_file:
-                data_file.write(f"{website} | {username} | {password}\n")
+            try:
+                with open("data.json", 'r') as data_file:
+                    data = json.load(data_file)
+        except FileNotFoundError:
+            with open("data.json", 'w') as data_file:
+                json.dump(new_data, data_file, indent=4)
+        else:
+            data.update(new_data)
+            with open("data.json", 'w') as data_file:
+                json.dump(data, data_file, indent=4)
+        finally:
             website_input.delete(0, END)
             password_input.delete(0, END)
 
